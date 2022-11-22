@@ -1,0 +1,100 @@
+import random
+import pygame
+pygame.init()
+
+screen = pygame.display.set_mode((800, 600))
+running = True
+
+pygame.display.set_caption("Pallino Move")
+icon = pygame.image.load('pallinux.jpg')
+pygame.display.set_icon(icon)
+
+playerImg = pygame.image.load('pallinux.jpg')
+playerX = 370
+playerY = 450
+playerX_change = 0
+playerY_change = 0
+DEFAULT_IMAGE_SIZE = (64, 64)
+playerImg = pygame.transform.scale(playerImg, DEFAULT_IMAGE_SIZE)
+
+x = random.choice(range(100, 700))
+y = random.choice(range(100, 500))
+
+DEFAULT_IMAGE_SIZE2 = (300, 300)
+winImg = pygame.image.load('youwin.jpg')
+winX = 300
+winY = 250
+winImg = pygame.transform.scale(winImg, DEFAULT_IMAGE_SIZE2)
+
+
+
+grassImg = pygame.image.load('grass.png')
+grassX = random.choice(range(100, 700))
+grassY = random.choice(range(100, 500))
+grassX_change = 0
+grassY_change = 0
+def grass(x, y):
+    screen.blit(grassImg, (x, y))
+
+def win(x, y):
+    screen.blit(winImg, (x, y))
+
+def player(x, y):
+    screen.blit(playerImg, (x, y))
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            #open("palino", "w").write("")
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                playerX_change = -1
+            if event.key == pygame.K_RIGHT:
+                playerX_change = 1
+
+            if event.key == pygame.K_UP:
+                playerY_change = -1
+            if event.key == pygame.K_DOWN:
+                playerY_change = 1
+
+            if event.key == pygame.K_q:
+                open("palino", "w").write("")
+                grass(x, y)
+            if event.key == pygame.K_w:
+                running = False
+
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                playerX_change = 0
+            if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                playerY_change = 0
+
+        if open("palino", "r").read()=="1":
+            p = random.choice(range(100, 700))
+            grass(x, y)
+            win(winX, winY)
+
+        #if abs(playerX - grassX) < 20 or abs(playerY - grassY) < 20:
+         #   grass(random.choice(range(100, 700)), random.choice(range(100, 500)))
+
+    screen.fill((255, 203, 255))
+
+    playerY += playerY_change
+    playerX += playerX_change
+    player(playerX, playerY)
+    palino = open("palino", "r").read()
+    if palino!="1":
+        if abs(playerX-grassX)>20 or abs(playerY-grassY)>20:
+            grass(grassX, grassY)
+        else:
+            print("br")
+            open("palino", "w").write("1")
+            win(winX, winY)
+    if palino=="1":
+        #if abs(playerX-grassX)>20 or abs(playerY-grassY)>20:
+            #grass(grassX, grassY)
+        win(winX, winY)
+
+    pygame.display.update()
